@@ -16,6 +16,7 @@ let methods = [
 methods.forEach(method => {
   arrayMethods[method] = function(...args) {
     let res = arrayProto[method].apply(this, args)
+    let ob = this.__ob__
     let increased = ''
     switch(method){
       case 'push':
@@ -26,8 +27,8 @@ methods.forEach(method => {
         increased = args.slice(2)
         break;
     }
-    let ob = this.__ob__
     increased && ob.observeArray(increased)
+    ob.dep.notify()
     return res
   }
 })

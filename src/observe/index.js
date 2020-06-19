@@ -4,6 +4,7 @@ import Dep from './dep'
 
 class Observe {
   constructor(data) {
+    this.dep = new Dep()
     // 为观察的对象添加 __ob__ 标识
     def(data, '__ob__', this)
     if (Array.isArray(data)) {
@@ -51,6 +52,9 @@ function defineReactive(data, key, value) {
     get() {
       if (Dep.target) {
         dep.depend() // 收集依赖
+        if (Array.isArray(value)) {
+          dependArray(value)
+        }
       }
       return value
     },
@@ -66,4 +70,14 @@ function defineReactive(data, key, value) {
       return value
     }
   })
+}
+
+function dependArray (value) {
+  value.__ob__.dep.depend()
+  for (let item, i = 0, l = value.length; i < l; i++) {
+    item = value[i]
+    if (Array.isArray(item)) {
+      dependArray(item)
+    }
+  }
 }
