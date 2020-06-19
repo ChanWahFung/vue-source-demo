@@ -1,6 +1,6 @@
-import {initMixin} from './init.js'
-import {renderMixin} from './render.js'
-import {lifecycleMixin} from './lifecycle.js'
+import {initMixin} from './instance/init.js'
+import {renderMixin} from './instance/render.js'
+import {lifecycleMixin} from './instance/lifecycle.js'
 import {initGlobalAPI} from './global-api/index.js'
 
 function Vue(options) {

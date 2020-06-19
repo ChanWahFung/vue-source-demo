@@ -1,5 +1,5 @@
-import {createElement, createTextNode} from './vdom/create-element.js'
-import {nextTick} from './utils/netx-tick.js'
+import {createElement, createTextNode} from '../vdom/create-element.js'
+import {nextTick} from '../utils/netx-tick.js'
 
 export function renderMixin(Vue) {
   Vue.prototype._render = function (){

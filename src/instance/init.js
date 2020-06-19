@@ -1,7 +1,7 @@
 import {initState} from './state.js'
-import {compileToFunctions} from './compiler/index.js'
+import {compileToFunctions} from '../compiler/index.js'
 import {mountComponent} from './lifecycle.js'
-import {mergeOptions} from './utils/index.js'
+import {mergeOptions} from '../utils/index.js'
 import {callHook} from './lifecycle.js'
 
 export function initMixin(Vue){

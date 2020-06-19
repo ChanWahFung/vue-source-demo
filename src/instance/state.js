@@ -1,4 +1,4 @@
-import {observe} from './observe/index.js'
+import {observe} from '../observe/index.js'
 
 export function initState(vm){
   const options = vm.$options
