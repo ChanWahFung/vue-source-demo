@@ -45,15 +45,17 @@ function protoAugment(data, arrayMethods) {
   data.__proto__ = arrayMethods
 }
 
-function defineReactive(data, key, value) {
-  observe(value)
-  let dep = new Dep()
-  Object.defineProperty(data, key, {
+function defineReactive(obj, key, value) {
+  let childOb = observe(value)
+  const dep = new Dep()
+  Object.defineProperty(obj, key, {
     get() {
       if (Dep.target) {
         dep.depend() // 收集依赖
-        if (Array.isArray(value)) {
-          dependArray(value)
+        // 子元素收集依赖
+        // 主要应用于数组变动时会调用 ob.dep.notify()
+        if (childOb) {
+          childOb.dep.depend()
         }
       }
       return value
@@ -64,20 +66,11 @@ function defineReactive(data, key, value) {
       }
       value = newVal
       // 新值有可能是对象 需要观察
-      observe(newVal)
-      // 同时 watcher 更新
+      // 赋值给 childOb 是因为新值可能是数组，再重新取值时为数组收集依赖
+      childOb = observe(newVal)
+      // 更新视图
       dep.notify()
       return value
     }
   })
-}
-
-function dependArray (value) {
-  value.__ob__.dep.depend()
-  for (let item, i = 0, l = value.length; i < l; i++) {
-    item = value[i]
-    if (Array.isArray(item)) {
-      dependArray(item)
-    }
-  }
 }

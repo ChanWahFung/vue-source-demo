@@ -7,10 +7,9 @@
   <script src="../dist/vue.js"></script>
 </head>
 <body>
-  <iframe frameborder="0" width="677" height="507.75" allow="autoplay; fullscreen" allowfullscreen="true" src="//v.qq.com/txp/iframe/player.html?origin=https%3A%2F%2Fmp.weixin.qq.com&amp;chid=17&amp;vid=y3101v09085&amp;autoplay=false&amp;full=true&amp;show1080p=false&amp;isDebugIframe=false"></iframe>
   <div id="app" style="color:red;font-size: 18px;">
     abc
-    <p>hello {{ msg }} {{ msg }} {{ msg2 }} {{arr[0]}}</p>
+    <p>hello {{ msg }} {{ obj.obj.name }} {{arr[0].name}}</p>
   </div>
 </body>
 <script>
@@ -26,7 +25,12 @@
     el: '#app',
     data() {
       return {
-        arr: [1],
+        arr: [{name: '123'}],
+        obj: {
+          obj: {
+            name: 'JOJO'
+          }
+        },
         msg: 123,
         msg2: 234
       }
@@ -42,7 +46,6 @@
       console.log(app.innerHTML)
     },
   })
-
   
 </script>
 </html>
