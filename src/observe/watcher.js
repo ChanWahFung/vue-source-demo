@@ -21,11 +21,11 @@ export class Watcher {
   }
   get() {
     // 1. pushTarget 将当前 watcher 记录到 Dep.target，Dep.target 是全局唯一的
-    // 2. 从组件来看，this.getter 最终会执行 vm._render 函数，render 函数内会对实例上的属性取值，
-    //由此触发 Object.defineProperty 的 get 方法，在 get 方法内进行依赖收集（dep.depend），这里依赖收集就需要用到 Dep.target
-    // 3. popTarget 将 Dep.target 置空
     pushTarget(this)
+    // 2. 调用 this.getter 相当于会执行 vm._render 函数，对实例上的属性取值，
+    //由此触发 Object.defineProperty 的 get 方法，在 get 方法内进行依赖收集（dep.depend），这里依赖收集就需要用到 Dep.target
     this.getter()
+    // 3. popTarget 将 Dep.target 置空
     popTarget(this)
   }
   addDep(dep) {

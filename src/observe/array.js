@@ -15,18 +15,18 @@ methods.forEach(method => {
   arrayMethods[method] = function(...args) {
     let res = arrayProto[method].apply(this, args)
     let ob = this.__ob__
-    let increased = ''
+    let inserted = ''
     switch(method){
       case 'push':
       case 'unshift':
-        increased = args
+        inserted = args
         break;
       case 'splice':
-        increased = args.slice(2)
+        inserted = args.slice(2)
         break;
     }
     // 对新增的值观测
-    increased && ob.observeArray(increased)
+    inserted && ob.observeArray(inserted)
     // 更新视图
     ob.dep.notify()
     return res
