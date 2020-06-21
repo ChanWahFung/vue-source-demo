@@ -2,7 +2,7 @@ let id = 0
 
 class Dep{
   constructor() {
-    this.id = id++
+    this.id = ++id
     this.subs = []
   }
   depend() {

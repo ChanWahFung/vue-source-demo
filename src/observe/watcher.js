@@ -5,7 +5,7 @@ let id = 0
 
 export class Watcher {
   constructor(vm, exprOrFn, cb, options){
-    this.id = id++  // watcher 唯一标识
+    this.id = ++id  // watcher 唯一标识
     this.vm = vm
     this.cb = cb
     this.options = options
