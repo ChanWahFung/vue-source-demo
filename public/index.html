@@ -9,7 +9,7 @@
 <body>
   <div id="app" style="color:red;font-size: 18px;">
     abc
-    <p>hello {{ msg }} {{ obj.obj.name }} {{arr[0].name}}</p>
+    <p>hello {{ msg }} {{count}} {{ obj.obj.name }} {{arr[0].name}}</p>
   </div>
 </body>
 <script>
@@ -35,15 +35,20 @@
         msg2: 234
       }
     },
+    computed: {
+      count() {
+        return this.msg + '456'
+      }
+    },
     // beforeMount() {
     //   console.log(1)
     // },
     mounted() {
-      this.msg = 666
-      this.$nextTick(()=>{
-        console.log(app.innerHTML)
-      })
-      console.log(app.innerHTML)
+      // this.msg = 666
+      // this.$nextTick(()=>{
+      //   console.log(app.innerHTML)
+      // })
+      // console.log(app.innerHTML)
     },
   })
   

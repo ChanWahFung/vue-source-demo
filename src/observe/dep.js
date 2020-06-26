@@ -20,13 +20,16 @@ class Dep{
 }
 
 Dep.target = null
+let stack = []  // 存储 watcher 的栈
 
 export function pushTarget(watcher) {
+  stack.push(watcher)
   Dep.target = watcher
 } 
 
 export function popTarget(){
-  Dep.target = null
+  stack.pop()
+  Dep.target = stack[stack.length - 1]
 }
 
 export default Dep
