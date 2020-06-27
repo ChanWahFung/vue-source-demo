@@ -10,9 +10,9 @@ class Watcher {
     this.cb = cb
     this.options = options
     this.getter = exprOrFn
-  
-    this.lazy = options.lazy
-    this.dirty = options.lazy
+    // 缓存标识
+    this.lazy = !!options.lazy
+    this.dirty = this.lazy
 
     this.deps = []
     this.depIds = new Set()
@@ -50,6 +50,7 @@ class Watcher {
       queueWatcher(this)
     }
   }
+  // 计算属性求值
   evaluate() {
     this.value = this.get()
     this.dirty = false

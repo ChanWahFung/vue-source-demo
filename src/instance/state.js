@@ -4,6 +4,14 @@ import Dep from '../observe/dep.js'
 
 const noop = function() {}
 
+// 数据劫持的属性描述对象
+const sharedPropertyDefinition = {
+  enumerable: true,
+  configurable: true,
+  get: noop,
+  set: noop
+}
+
 export function initState(vm){
   const options = vm.$options
   if (options.data) {
@@ -39,16 +47,18 @@ function proxy(target, property, key) {
 
 function initComputed(vm) {
   const computed = vm.$options.computed
+  // 存储 计算属性watcher
   const watchers = vm._computedWatchers = Object.create(null)
   for (const key in computed) {
     const userDef = computed[key]
+    // 获取计算属性getter函数
     const getter = typeof userDef === 'function' ? userDef : userDef.get
-
+    // 创建 计算属性watcher
     watchers[key] = new Watcher(
       vm,
       getter || noop,
       noop,
-      {lazy: true}
+      {lazy: true} // 缓存标识
     )
     if (!(key in vm)) {
       definedComputed(vm, key, userDef)
@@ -57,7 +67,6 @@ function initComputed(vm) {
 }
 
 function definedComputed(vm, key, userDef) {
-  const sharedPropertyDefinition = {}
   if (typeof userDef === 'function') {
     sharedPropertyDefinition.get = createComputedGetter(key)
     sharedPropertyDefinition.set = noop
@@ -70,7 +79,7 @@ function definedComputed(vm, key, userDef) {
 }
 
 function createComputedGetter(key) {
-  // 计算属性 get
+  // 这里就是计算属性被获取时触发的 get
   return function computedGetter() {
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) { // 计算属性  实现缓存机制
