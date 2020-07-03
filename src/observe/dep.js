@@ -17,6 +17,14 @@ class Dep{
   notify() {
     this.subs.forEach(watcher => watcher.update())
   }
+  removeSub(watcher) {
+    for (let i = 0, len = this.subs.length; i < len; i++) {
+      if (this.subs[i] === watcher) {
+        this.subs.splice(i, 1)
+        return
+      }
+    }
+  }
 }
 
 Dep.target = null

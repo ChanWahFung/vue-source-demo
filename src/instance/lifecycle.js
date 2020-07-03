@@ -15,7 +15,7 @@ export function mountComponent (vm, el) {
     // _render方法 返回 vnode
     // _render => 内部调用 options.render
     // _update => 虚拟dom转真实dom
-    console.log('---update---')
+    console.log('—————— render ——————')
     vm._update(vm._render())
   }
   // 数据变化 执行 updateCompoent

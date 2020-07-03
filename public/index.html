@@ -40,10 +40,17 @@
         return this.msg + '456'
       }
     },
-    // beforeMount() {
-    //   console.log(1)
-    // },
     mounted() {
+      let unwatchFn = this.$watch('obj', (newVal, oldVal) => {
+        console.log(newVal.obj.name)
+      },{
+        deep: true,
+        immediate: true,
+      })
+      setTimeout(()=>{
+        unwatchFn()
+        this.obj.obj.name = 'jojo'
+      }, 2000)
       // this.msg = 666
       // this.$nextTick(()=>{
       //   console.log(app.innerHTML)

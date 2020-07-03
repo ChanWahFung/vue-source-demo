@@ -1,5 +1,7 @@
 import {pushTarget, popTarget} from './dep.js'
 import {queueWatcher} from './scheduler.js'
+import {parsePath} from '../utils/index.js'
+import {traverse} from './traverse.js'
 
 let id = 0
 
@@ -8,19 +10,37 @@ class Watcher {
     this.id = ++id  // watcher 唯一标识
     this.vm = vm
     this.cb = cb
-    this.options = options
-    this.getter = exprOrFn
-    // 缓存标识
-    this.lazy = !!options.lazy
+
+    if (options) {
+      this.user = !!options.user
+      this.deep = !!options.deep
+      // 缓存标识
+      this.lazy = !!options.lazy
+    } else {
+      this.user = this.lazy = this.deep = false
+    }
+    
     this.dirty = this.lazy
 
     this.deps = []
     this.depIds = new Set()
 
+    if (typeof exprOrFn === 'function') {
+      this.getter = exprOrFn
+    } else {
+      // 解析 watch 的 key
+      this.getter = parsePath(exprOrFn)
+    }
+
     this.value = this.lazy ? undefined : this.get()
   }
   run() {
-    this.get()
+    const value = this.get()
+    const oldValue = this.value
+    this.value = value
+    if (this.user) {
+      this.cb.call(this.vm, value, oldValue)
+    }
   }
   get() {
     const vm = this.vm
@@ -29,6 +49,10 @@ class Watcher {
     // 2. 调用 this.getter 相当于会执行 vm._render 函数，对实例上的属性取值，
     //由此触发 Object.defineProperty 的 get 方法，在 get 方法内进行依赖收集（dep.depend），这里依赖收集就需要用到 Dep.target
     let value = this.getter.call(vm, vm)
+    // 深度监听 watch
+    if (this.deep) {
+      traverse(value)
+    }
     // 3. popTarget 将 Dep.target 置空
     popTarget(this)
     return value
@@ -57,9 +81,14 @@ class Watcher {
   }
   depend() {
     let i = this.deps.length
-    console.log(this)
     while (i--) {
       this.deps[i].depend()
+    }
+  }
+  teardown() {
+    let i = this.deps.length
+    while (i--) {
+      this.deps[i].removeSub(this)
     }
   }
 }

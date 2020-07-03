@@ -11,6 +11,19 @@ export function def(data, key, value) {
   })
 }
 
+export function parsePath(key) {
+  const keys = key.split('.')
+  // obj 为 vm
+  return function(obj) {
+    for (let i = 0,len = keys.length; i < len; i++) {
+      if (!obj) return
+      // 触发属性 数据劫持get 依赖收集
+      obj = obj[keys[i]]
+    }
+    return obj
+  }
+}
+
 // 合并策略
 
 const strats = {}

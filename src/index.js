@@ -1,6 +1,7 @@
 import {initMixin} from './instance/init.js'
 import {renderMixin} from './instance/render.js'
 import {lifecycleMixin} from './instance/lifecycle.js'
+import {stateMixin} from './instance/state.js'
 import {initGlobalAPI} from './global-api/index.js'
 
 function Vue(options) {
@@ -11,6 +12,7 @@ function Vue(options) {
 initMixin(Vue) // _init
 renderMixin(Vue) // _render
 lifecycleMixin(Vue) // _update
+stateMixin(Vue) // $watch
 
 // 添加静态方法 Vue.mixin
 initGlobalAPI (Vue)

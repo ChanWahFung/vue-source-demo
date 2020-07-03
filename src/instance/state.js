@@ -1,4 +1,5 @@
 import {observe} from '../observe/index.js'
+import {isObject} from '../utils/index.js'
 import Watcher from '../observe/watcher.js'
 import Dep from '../observe/dep.js'
 
@@ -19,6 +20,9 @@ export function initState(vm){
   }
   if (options.computed) {
     initComputed(vm)
+  }
+  if (options.watch) {
+    initWatch(vm)
   }
 }
 
@@ -110,5 +114,47 @@ function createComputedGetter(key) {
       }
     }
     return watcher.value
+  }
+}
+
+function initWatch(vm) {
+  const watch = vm.$options.watch
+  for (const key in watch) {
+    const handler = watch[key]
+    if (Array.isArray(handler)) {
+      for (let i = 0; i < handler.length; i++) {
+        createWatcher(vm, key, handler[i])
+      }
+    } else {
+      createWatcher(vm, key, handler)
+    }
+  }
+}
+
+function createWatcher(vm, key, handler, options) {
+  // 对象watch
+  if (isObject(handler)) {
+    options = handler
+    handler = handler.handler
+  }
+  // 字符串watch 直接用实例上的方法
+  if (typeof handler === 'string') {
+    handler = vm[handler]
+  }
+  return vm.$watch(key, handler, options)
+}
+
+export function stateMixin(Vue) {
+  Vue.prototype.$watch = function (key, cb, options) {
+    options = options || {}
+    options.user = true
+    const watcher = new Watcher(this, key, cb, options)
+    // 立即调用 watch
+    if (options.immediate) {
+      cb.call(this, watcher.value)
+    }
+    return function unwatchFn() {
+      watcher.teardown()
+    }
   }
 }
