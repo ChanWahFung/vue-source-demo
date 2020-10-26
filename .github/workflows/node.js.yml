@@ -23,11 +23,9 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_TOKEN }}
         REMOTE_HOST: '182.254.205.45'
-        REMOTE_PORT: '80'
         REMOTE_USER: 'root'
         SOURCE: ''
         TARGET: '/home/actions'
-        ARGS: '-avzr --delete'
     # ssh连接服务器，执行命令
     - name: start server
       uses: appleboy/ssh-action@master
@@ -36,6 +34,6 @@ jobs:
         username: 'root'
         key: ${{ secrets.SERVER_TOKEN }}
         script: |
-          cd /home／actions
+          cd /home/actions
           touch success.txt
       
