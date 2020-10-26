@@ -18,11 +18,27 @@ jobs:
         node-version: [10.x, 12.x, 14.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    # 获取源码
+    - name: checkout
+      uses: actions/checkout@v2
+    # 复制代码到服务器
+    - name: Deploy to Server
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_TOKEN }}
+        REMOTE_HOST: '182.254.205.45'
+        REMOTE_USER: 'root'
+        SOURCE: ''
+        TARGET: '/home/actions'
+        ARGS: '-avzr --delete'
+    # ssh连接服务器，执行命令
+    - name: start server
+      uses: appleboy/ssh-action@master
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+        host: '182.254.205.45'
+        username: 'root'
+        key: ${{ secrets.SERVER_TOKEN }}
+        script: |
+          cd /home／actions
+          touch success.txt
+      
