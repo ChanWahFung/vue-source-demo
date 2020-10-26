@@ -27,6 +27,7 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_TOKEN }}
         REMOTE_HOST: '182.254.205.45'
+        REMOTE_PORT: '80'
         REMOTE_USER: 'root'
         SOURCE: ''
         TARGET: '/home/actions'
